@@ -7,8 +7,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import cross_val_score
 
 
-
-def train_linear_model(data: pd.DataFrame):
+def train_linear_model(data: pd.DataFrame, include_angles: bool = False):
     """
     Trains a linear regression model on triangle data.
 
@@ -19,7 +18,10 @@ def train_linear_model(data: pd.DataFrame):
     - model: trained LinearRegression model
     - metrics: dict of training performance
     """
-    X = data[["a", "b"]]
+    if include_angles:
+        X = data[["a", "b", "angle_deg"]]
+    else:
+        X = data[["a", "b"]]
     y = data["c"]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
