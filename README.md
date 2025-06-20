@@ -1,4 +1,7 @@
 # HypotAI: Artificial Idiocy
+*``Simplicity is overrated''* <br>
+Melih Kara
+
 
 **HypotAI** is a parody AI project born out of the relentless hype to apply "artificial intelligence" to every imaginable problem — including those with **simple, exact solutions**.
 
