@@ -86,10 +86,41 @@ def center_text(ax, text, x, y, fontsize=12):
             bbox=dict(facecolor='none', alpha=0.5), rotation_mode='anchor')
 
 
-def plot_triangle(a, b, angle=90, ax=None):
+# def plot_triangle(a, b, angle=90, ax=None, annotation=True):
+#     """
+#     Plots a triangle given sides a and b, and the angle between them.
+#     If ax is provided, plots on that axis.
+#     """
+#     # Use law of cosines for non-right triangles
+#     if angle == 90:
+#         c = np.sqrt(a**2 + b**2)
+#     else:
+#         c = np.sqrt(a**2 + b**2 - 2*a*b*np.cos(np.radians(angle)))
+
+#     # Coordinates of the triangle vertices
+#     x = np.array([0, a, a - b * np.cos(np.radians(angle)), 0])
+#     y = np.array([0, 0, b * np.sin(np.radians(angle)), 0])
+
+#     if ax is None:
+#         plt.figure(figsize=(4, 4))
+#         ax = plt.gca()
+
+#     ax.plot(x, y, marker='o', color='blue', label='Triangle')
+#     ax.fill(x, y, alpha=0.3, color='blue')
+
+#     if annotation:
+#         center_text(ax, f'a = {a:.1f}', x[:2], y[:2],)
+#         center_text(ax, f'b = {b:.1f}', x[[0,2]], y[[0,2]],)
+#         center_text(ax, f'c = {c:.1f}', x[[1,2]], y[[1,2]],)
+
+#     ax.set_xlabel("Side a")
+#     ax.set_ylabel("Side b")
+#     ax.grid()
+
+def plot_triangle(a, b, angle=90, ax=None, annotation=True, highlight_color='red'):
     """
     Plots a triangle given sides a and b, and the angle between them.
-    If ax is provided, plots on that axis.
+    Highlights the longest side.
     """
     # Use law of cosines for non-right triangles
     if angle == 90:
@@ -101,16 +132,27 @@ def plot_triangle(a, b, angle=90, ax=None):
     x = np.array([0, a, a - b * np.cos(np.radians(angle)), 0])
     y = np.array([0, 0, b * np.sin(np.radians(angle)), 0])
 
+    # Compute side lengths
+    side_lengths = [
+        np.hypot(x[1] - x[0], y[1] - y[0]),  # side a
+        np.hypot(x[2] - x[1], y[2] - y[1]),  # side c
+        np.hypot(x[2] - x[0], y[2] - y[0])   # side b
+    ]
+    # Indices of the triangle's sides: (0,1), (1,2), (2,0)
+    sides = [(0,1), (1,2), (2,0)]
+    longest_idx = np.argmax(side_lengths)
+
     if ax is None:
         plt.figure(figsize=(4, 4))
         ax = plt.gca()
 
-    ax.plot(x, y, marker='o', color='blue', label='Triangle')
-    ax.fill(x, y, alpha=0.3, color='blue')
+    # Plot all sides, highlighting the longest
+    for i, (start, end) in enumerate(sides):
+        color = highlight_color if i == longest_idx else 'blue'
+        ax.plot([x[start], x[end]], [y[start], y[end]], color=color, linewidth=3 if i == longest_idx else 2)
 
-    center_text(ax, f'a = {a:.1f}', x[:2], y[:2],)
-    center_text(ax, f'b = {b:.1f}', x[[0,2]], y[[0,2]],)
-    center_text(ax, f'c = {c:.1f}', x[[1,2]], y[[1,2]],)
+    # Fill the triangle
+    ax.fill(x, y, alpha=0.3, color='blue')
 
     ax.set_xlabel("Side a")
     ax.set_ylabel("Side b")
