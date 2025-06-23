@@ -39,6 +39,8 @@ def get_model(model_number:int = 1):
     """
     if model_number == 1:
         return model1
+    elif model_number == 2:
+        return model2
     else:
         raise ValueError(f"Model {model_number} is not defined.")
     
@@ -58,5 +60,28 @@ model1 = models.Sequential([
 
     layers.Flatten(),
     layers.Dense(64, activation='relu'),
+    layers.Dense(1)  # Output: regression value
+])
+
+
+# Define an alternative , each layer extracts more abstract features
+## At each layer, each kernel learns more complex features 
+model2 = models.Sequential([
+    layers.Input(shape=(64, 64, 1)),  # Grayscale input
+
+    layers.Conv2D(32, (5, 5), activation='relu'),  ### 32 filters, each 5x5 : learns broader features
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(16, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(8, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Conv2D(8, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+
+    layers.Flatten(),
+    layers.Dense(16, activation='relu'),
     layers.Dense(1)  # Output: regression value
 ])
