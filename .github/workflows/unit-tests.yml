@@ -1,0 +1,22 @@
+# Simple random unit test workflow for GitHub Actions integration test
+name: Random Unit Test
+
+on:
+  workflow_dispatch:   # still allow manual runs
+  pull_request:
+    types: [labeled]   # trigger when labels change
+
+jobs:
+    random-check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Run random check
+              run: |
+                  echo "Random check: $RANDOM"
+                  if [ $((RANDOM % 2)) -eq 0 ]; then
+                      echo "Success!"
+                  else
+                        echo "Failure!"
+                    fi
