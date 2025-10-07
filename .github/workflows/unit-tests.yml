@@ -8,23 +8,23 @@ on:
 
 jobs:
   random-check:
-      runs-on: ubuntu-latest
-      if: github.event.label.name == 'run-tests'
-      steps:
-          - name: Checkout code
-            uses: actions/checkout@v3
-          - name: Run random check
-            run: |
-                echo "Random check: $RANDOM"
-                if [ $((RANDOM % 2)) -eq 0 ]; then
-                    echo "Success!"
-                else
-                    echo "Failure!"
-                  fi
-          - name: Remove run-tests label
-            if: always()
-            uses: actions-ecosystem/action-remove-labels@v1
-            with:
-              github_token: ${{ secrets.GITHUB_TOKEN }}
-              labels: run-tests
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'run-tests'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run random check
+        run: |
+            echo "Random check: $RANDOM"
+            if [ $((RANDOM % 2)) -eq 0 ]; then
+                echo "Success!"
+            else
+                echo "Failure!"
+            fi
+      - name: Remove run-tests label
+        if: always()
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: run-tests
 
