@@ -24,7 +24,7 @@ jobs:
             });
 
             const body = pr.data.body || "";
-            const required = "- [x] I confirm I updated the config with valid values";
+            const required = "- [x] I confirm that I updated the SQL database (if I changed the models.py)";
             
             if (!body.includes(required)) {
               core.setFailed("❌ Required checkbox is not checked in the PR body.");
