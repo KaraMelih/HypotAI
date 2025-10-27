@@ -19,6 +19,8 @@ def generate_triangle_data(
 
     Returns:
     - pd.DataFrame with columns: a, b, angle_deg, c
+
+    # this is a test change
     """
     rng = np.random.default_rng(seed)
     a = rng.uniform(0.1, 100.0, n_samples)
