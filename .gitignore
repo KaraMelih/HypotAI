@@ -12,8 +12,6 @@ __pycache__/
 *.tsv
 *.json
 *.xml
-*.yaml
-*.yml
 *.pickle
 *.h5
 *.pth
