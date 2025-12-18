@@ -1,0 +1,39 @@
+# Simple random unit test workflow for GitHub Actions integration test
+name: Random Unit Test
+
+on:
+  workflow_dispatch:   # still allow manual runs
+  pull_request:
+    types: [labeled]   # trigger when labels change
+
+jobs:
+  random-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event payload (for debugging)
+        run: |
+          echo "EVENT PAYLOAD:" && cat $GITHUB_EVENT_PATH
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run random check if label is run-tests
+        run: |
+          LABEL_NAME=$(jq -r '.label.name' "$GITHUB_EVENT_PATH")
+          echo "Label name: $LABEL_NAME"
+          if [ "$LABEL_NAME" = "run-tests" ]; then
+            echo "Random check: $RANDOM"
+            if [ $((RANDOM % 2)) -eq 0 ]; then
+              echo "Success!"
+            else
+              echo "Failure!"
+            fi
+          else
+            echo "Label is not run-tests, skipping test."
+            exit 0
+          fi
+      - name: Remove run-tests label
+        if: always()
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: run-tests
+

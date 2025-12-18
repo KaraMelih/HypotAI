@@ -1,0 +1,33 @@
+name: Check PR checkbox on config change
+
+on:
+  pull_request:
+    paths:
+      - 'hypotai/data.py'
+
+jobs:
+  enforce_checkbox:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Check PR body for checkbox
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+
+            const body = pr.data.body || "";
+            const required = "- [x] I confirm I updated the config with valid values";
+            
+            if (!body.includes(required)) {
+              core.setFailed("❌ Required checkbox is not checked in the PR body.");
+            } else {
+              core.info("✅ Required checkbox is checked.");
+            }
